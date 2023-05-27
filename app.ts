@@ -1,10 +1,9 @@
-async function handleHttp(conn: Deno.Conn) {
-  for await (const e of Deno.serveHttp(conn)) {
-    e.respondWith(new Response('Hello World'));
-  }
-}
+import { Application } from 'https://deno.land/x/oak@v12.5.0/mod.ts';
 
-for await (const conn of Deno.listen({ port: 3000 })) {
-  handleHttp(conn);
-  console.log(conn.localAddr);
-}
+const app = new Application();
+
+app.use((ctx) => {
+  ctx.response.body = 'Hello World!';
+});
+
+await app.listen({ port: 3000 });
