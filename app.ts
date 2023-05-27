@@ -1,5 +1,10 @@
-const text = 'This is a text and it should be stored in a file';
+async function handleHttp(conn: Deno.Conn) {
+  for await (const e of Deno.serveHttp(conn)) {
+    e.respondWith(new Response('Hello World'));
+  }
+}
 
-Deno.writeTextFile('text.txt', text)
-    .then(() => console.log('File created successfully.'))
-    .catch((error: Error) => console.log(error));
+for await (const conn of Deno.listen({ port: 3000 })) {
+  handleHttp(conn);
+  console.log(conn.localAddr);
+}
