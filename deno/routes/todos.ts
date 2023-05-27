@@ -7,10 +7,10 @@ interface Todo {
   text: string;
 }
 
-const todos: Todo[] = [];
+let todos: Todo[] = [];
 
 router.get('/todos', (ctx) => {
-  ctx.response.body = { todos };
+  ctx.response.body = { todos: todos };
 });
 
 router.post('/todos', async (ctx) => {
@@ -19,7 +19,9 @@ router.post('/todos', async (ctx) => {
     id: new Date().toISOString(),
     text: data.text,
   };
+
   todos.push(newTodo);
+
   ctx.response.body = { message: 'Created todo!', todo: newTodo };
 });
 
@@ -35,10 +37,7 @@ router.put('/todos/:todoId', async (ctx) => {
 
 router.delete('/todos/:todoId', (ctx) => {
   const tid = ctx.params.todoId;
-  const todoIndex = todos.findIndex((todo) => {
-    return todo.id === tid;
-  });
-  todos.splice(todoIndex, 1);
+  todos = todos.filter((todo) => todo.id !== tid);
   ctx.response.body = { message: 'Deleted todo' };
 });
 
